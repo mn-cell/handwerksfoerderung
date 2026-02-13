@@ -49,6 +49,11 @@
         .footer-legal { font-size: 0.85rem; color: #888; border-top: 1px solid #333; padding-top: 20px; }
         .footer-legal a { color: var(--secondary); text-decoration: none; margin: 0 10px; }
 
+        /* Styles für die neue starre Personal-Sektion */
+        .fe-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .fe-label-main { font-size: 0.9rem; font-weight: bold; display: block; }
+        .fe-label-sub { font-size: 0.7rem; color: #666; display: block; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -139,11 +144,37 @@
         <div class="card">
             <h3>3. Personal F&E (Innovation)</h3>
             <div class="calc-box">
-                <label>Brutto-Lohn mtl. / MA (€):</label>
-                <input type="number" id="fe_lohn" oninput="calc()" placeholder="z.B. 4500">
-                <label>Anzahl Mitarbeiter:</label>
-                <input type="number" id="fe_staff" oninput="calc()" placeholder="Anzahl">
-                <div id="res_fe" class="res-box">0,00 € / mtl.</div>
+                <div class="fe-row">
+                    <div>
+                        <span class="fe-label-main">Mitarbeiter A-C</span>
+                        <span class="fe-label-sub">Projektleitung / Wiss. (18 Mon.)</span>
+                    </div>
+                    <div>
+                        <label>Anzahl:</label>
+                        <input type="number" id="fe_ac_staff" oninput="calc()" value="0">
+                    </div>
+                </div>
+
+                <div class="fe-row">
+                    <div>
+                        <span class="fe-label-main">Mitarbeiter D-E</span>
+                        <span class="fe-label-sub">Techniker / Fachkraft (6 Mon.)</span>
+                    </div>
+                    <div>
+                        <label>Anzahl:</label>
+                        <input type="number" id="fe_de_staff" oninput="calc()" value="0">
+                    </div>
+                </div>
+
+                <label>Förderquote:</label>
+                <select id="fe_rate" onchange="calc()">
+                    <option value="0.60">Kleine Unternehmen (60%)</option>
+                    <option value="0.45">Mittlere Unternehmen (45%)</option>
+                </select>
+
+                <div id="res_fe" class="res-box">0,00 €</div>
+                <div id="warn_fe" class="max-hint">⚠️ Limit von 500.000 € erreicht!</div>
+                <p style="font-size: 0.7rem; color: #888; margin-top: 5px;">Inkl. 40% Sachkostenpauschale (Basis: Ø Lohn 4.500 €).</p>
                 <button class="btn-pdf" onclick="window.print()">Ergebnis speichern</button>
             </div>
         </div>
@@ -187,7 +218,7 @@
     setInterval(() => setSlide((cur + 1) % slides.length), 5500);
 
     function calc() {
-        // Invest
+        // 1. Invest
         const iv = parseFloat(document.getElementById('inv_val').value) || 0;
         const sel = document.getElementById('inv_type');
         const ir = parseFloat(sel.value);
@@ -197,16 +228,33 @@
         else { document.getElementById('warn_inv').style.display = 'none'; }
         document.getElementById('res_inv').innerText = (ir === 1.0 ? "Darlehen: " : "Zuschuss: ") + iRes.toLocaleString('de-DE', {style:'currency', currency:'EUR'});
 
-        // Weiterbildung (Korrektur: Max 100k)
+        // 2. Weiterbildung
         const wc = parseFloat(document.getElementById('wb_cost').value) || 0;
         const wr = parseFloat(document.getElementById('wb_size').value);
         let wbRes = Math.min(wc * wr, 100000);
         document.getElementById('res_wb').innerText = "Zuschuss: " + wbRes.toLocaleString('de-DE', {style:'currency', currency:'EUR'});
 
-        // F&E
-        const fl = parseFloat(document.getElementById('fe_lohn').value) || 0;
-        const fs = parseFloat(document.getElementById('fe_staff').value) || 0;
-        let feRes = (fl * fs * 1.4) * 0.6;
+        // 3. F&E (Starre Grundlagen-Berechnung)
+        // Durchschnittslohn 4.500 € * 1.4 (Sachkostenaufschlag)
+        const LOHN_BASIS = 4500 * 1.4;
+        const ac_count = parseFloat(document.getElementById('fe_ac_staff').value) || 0;
+        const de_count = parseFloat(document.getElementById('fe_de_staff').value) || 0;
+        const fe_rate = parseFloat(document.getElementById('fe_rate').value);
+
+        // A-C: 18 Monate | D-E: 6 Monate
+        let sum_ac = ac_count * LOHN_BASIS * 18;
+        let sum_de = de_count * LOHN_BASIS * 6;
+        
+        let feRes = (sum_ac + sum_de) * fe_rate;
+
+        // Deckel 500k
+        if(feRes > 500000) {
+            feRes = 500000;
+            document.getElementById('warn_fe').style.display = 'block';
+        } else {
+            document.getElementById('warn_fe').style.display = 'none';
+        }
+
         document.getElementById('res_fe').innerText = "Zuschuss: " + feRes.toLocaleString('de-DE', {style:'currency', currency:'EUR'});
     }
 </script>
