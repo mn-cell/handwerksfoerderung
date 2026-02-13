@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwerks-Förderrechner 2026</title>
+    <style>
+        :root { --primary: #1d2547; --secondary: #b9a066; --bg: #f4f7fa; --white: #ffffff; --red: #d32f2f; --green: #2e7d32; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--primary); }
+        
+        .header { background: var(--white); padding: 30px 20px; text-align: center; border-bottom: 3px solid var(--secondary); }
+        .logo { max-width: 250px; margin-bottom: 10px; }
+        
+        .hero { background: var(--primary); color: white; padding: 40px 20px; text-align: center; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 5px; }
+        .hero p { color: var(--white); font-weight: 500; font-size: 1.2rem; opacity: 0.9; }
+
+        .carousel-outer { max-width: 850px; margin: -30px auto 30px; position: relative; }
+        .carousel-container { 
+            background: var(--white); padding: 35px; border-radius: 12px; 
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15); text-align: center; min-height: 240px;
+        }
+        .example-slide { display: none; }
+        .example-slide.active { display: block; animation: fadeIn 0.5s; }
+        .example-tag { color: var(--secondary); font-weight: bold; font-size: 0.85rem; text-transform: uppercase; }
+        .example-title { font-size: 1.6rem; font-weight: 900; margin: 10px 0; color: var(--secondary); }
+        
+        .dots { margin-top: 15px; display: flex; justify-content: center; gap: 10px; }
+        .dot { width: 10px; height: 10px; background: #cbd5e0; border-radius: 50%; cursor: pointer; }
+        .dot.active { background: var(--secondary); transform: scale(1.3); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+
+        .card { background: white; border-radius: 10px; padding: 25px; border-top: 5px solid var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .calc-box { background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #e2e8f0; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 1rem; margin-top: 5px; }
+        label { font-size: 0.8rem; font-weight: bold; color: #4a5568; }
+
+        .res-box { background: var(--primary); color: var(--secondary); padding: 15px; text-align: center; border-radius: 6px; font-weight: 800; margin-top: 15px; font-size: 1.4rem; border-bottom: 3px solid var(--secondary); }
+        
+        .btn-pdf { background: #f0f0f0; border: 1px solid #ccc; padding: 8px; width: 100%; margin-top: 10px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; }
+        .max-hint { color: var(--red); font-size: 0.75rem; font-weight: bold; display: none; margin-top: 5px; text-align: center; }
+
+        footer { background: var(--primary); color: white; padding: 60px 20px; text-align: center; margin-top: 50px; }
+        .btn-group { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 40px; }
+        .btn-footer { background: var(--secondary); color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; min-width: 220px; }
+        .footer-legal { font-size: 0.85rem; color: #888; border-top: 1px solid #333; padding-top: 20px; }
+        .footer-legal a { color: var(--secondary); text-decoration: none; margin: 0 10px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="logo.png" alt="ELBCONCEPT" class="logo">
+</div>
+
+<div class="hero">
+    <h1>Handwerks-Förderrechner 2026</h1>
+    <p>In wenigen Klicks zum maximalen Zuschuss für Ihren Betrieb.</p>
+</div>
+
+<div class="carousel-outer">
+    <div class="carousel-container" id="carousel">
+        <div class="example-slide active">
+            <span class="example-tag">Investition</span>
+            <div class="example-title">105.000 € Zuschuss</div>
+            <p>Ein Metallbauer kaufte ein neues Fräszentrum für 300.000 €. Sachsen-Anhalt übernahm 35% der Netto-Kosten.</p>
+        </div>
+        <div class="example-slide">
+            <span class="example-tag">Digital Innovation</span>
+            <div class="example-title">35.000 € Zuschuss</div>
+            <p>Einführung von Software zur KI-Einsatzplanung. 50% Förderung der Investitionssumme (70.000 €).</p>
+        </div>
+        <div class="example-slide">
+            <span class="example-tag">Weiterbildung (Betrieb)</span>
+            <div class="example-title">4.800 € Erstattung</div>
+            <p>Ein Tischler schulte seine 5 Mitarbeiter in CNC-Design. Bei 8.000 € Kosten gab es 60% Zuschuss vom Land.</p>
+        </div>
+        <div class="example-slide">
+            <span class="example-tag">Weiterbildung (Betrieb)</span>
+            <div class="example-title">12.000 € Erstattung</div>
+            <p>Ein SHK-Betrieb buchte Inhouse-Schulungen für Wärmepumpentechnik. 60% der Dozenten- und Seminarkosten zurück.</p>
+        </div>
+        <div class="example-slide">
+            <span class="example-tag">Innovation (F&E)</span>
+            <div class="example-title">145.000 € Lohnzuschuss</div>
+            <p>Entwicklung eines neuen, patentfähigen Bauelements. 60% der Personalkosten gefördert.</p>
+        </div>
+        <div class="example-slide">
+            <span class="example-tag">Innovation (F&E)</span>
+            <div class="example-title">310.000 € Projektförderung</div>
+            <p>Forschung an nachhaltigen Baustoffen. Maximale Unterstützung für innovative Handwerksbetriebe.</p>
+        </div>
+    </div>
+    <div class="dots" id="dotContainer"></div>
+</div>
+
+<div class="container">
+    <div class="grid">
+        <div class="card">
+            <h3>1. Investition & Technik</h3>
+            <div class="calc-box">
+                <label>Netto-Investition (€):</label>
+                <input type="number" id="inv_val" oninput="calc()" placeholder="z.B. 100000">
+                <label>Programm:</label>
+                <select id="inv_type" onchange="calc()">
+                    <option value="0.35" data-max="300000">SA Investiert (35%)</option>
+                    <option value="0.50" data-max="70000">Digital Innovation (50%)</option>
+                    <option value="0.80" data-max="100000">MedienPro (80%)</option>
+                    <option value="1.0" data-max="500000">SA Impuls (Darlehen)</option>
+                </select>
+                <div id="res_inv" class="res-box">0,00 €</div>
+                <div id="warn_inv" class="max-hint">⚠️ Maximalförderung erreicht!</div>
+                <button class="btn-pdf" onclick="window.print()">Ergebnis speichern</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>2. Weiterbildung (Betrieb)</h3>
+            <div class="calc-box">
+                <label>Seminarkosten/Gebühren (€):</label>
+                <input type="number" id="wb_cost" oninput="calc()" placeholder="z.B. 5000">
+                <label>Betriebsgröße:</label>
+                <select id="wb_size" onchange="calc()">
+                    <option value="0.6">Kleine Unternehmen (< 50 MA / 60%)</option>
+                    <option value="0.4">Mittlere Unternehmen (< 250 MA / 40%)</option>
+                    <option value="0.7">Kleinstunternehmen mit Tarifbindung (70%)</option>
+                </select>
+                <div id="res_wb" class="res-box">0,00 €</div>
+                <p style="font-size: 0.7rem; color: #888; margin-top: 5px;">Max. 100.000 € pro Vorhaben.</p>
+                <button class="btn-pdf" onclick="window.print()">Ergebnis speichern</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>3. Personal F&E (Innovation)</h3>
+            <div class="calc-box">
+                <label>Brutto-Lohn mtl. / MA (€):</label>
+                <input type="number" id="fe_lohn" oninput="calc()" placeholder="z.B. 4500">
+                <label>Anzahl Mitarbeiter:</label>
+                <input type="number" id="fe_staff" oninput="calc()" placeholder="Anzahl">
+                <div id="res_fe" class="res-box">0,00 € / mtl.</div>
+                <button class="btn-pdf" onclick="window.print()">Ergebnis speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 10px;">Kostenfreies Erstgespräch</div>
+    <div style="margin-bottom: 30px; color: #cbd5e0;">Sprechen Sie direkt mit unseren Experten über Ihre Projekte:</div>
+    <div class="btn-group">
+        <a href="https://calendly.com/michel-neumann" class="btn-footer">Termin Michel Neumann</a>
+        <a href="https://tim-lueth.de/erstgespraech" class="btn-footer">Termin Tim Lüth</a>
+    </div>
+    <div class="footer-legal">
+        <a href="https://elbconcept.de/impressum">Impressum</a> | 
+        <a href="https://elbconcept.de/datenschutz">Datenschutz</a> | 
+        <a href="https://elbconcept.de/registrierung">Registrierung</a>
+        <p style="margin-top: 15px;">© 2026 ElbConcept GmbH. Alle Angaben ohne Gewähr.</p>
+    </div>
+</footer>
+
+<script>
+    let cur = 0;
+    const slides = document.querySelectorAll('.example-slide');
+    const dotContainer = document.getElementById('dotContainer');
+    
+    slides.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'dot' + (i === 0 ? ' active' : '');
+        d.onclick = () => setSlide(i);
+        dotContainer.appendChild(d);
+    });
+
+    function setSlide(i) {
+        slides[cur].classList.remove('active');
+        dotContainer.children[cur].classList.remove('active');
+        cur = i;
+        slides[cur].classList.add('active');
+        dotContainer.children[cur].classList.add('active');
+    }
+    setInterval(() => setSlide((cur + 1) % slides.length), 5500);
+
+    function calc() {
+        // Invest
+        const iv = parseFloat(document.getElementById('inv_val').value) || 0;
+        const sel = document.getElementById('inv_type');
+        const ir = parseFloat(sel.value);
+        const imax = parseFloat(sel.options[sel.selectedIndex].getAttribute('data-max'));
+        let iRes = iv * ir;
+        if(iRes >= imax) { iRes = imax; document.getElementById('warn_inv').style.display = 'block'; }
+        else { document.getElementById('warn_inv').style.display = 'none'; }
+        document.getElementById('res_inv').innerText = (ir === 1.0 ? "Darlehen: " : "Zuschuss: ") + iRes.toLocaleString('de-DE', {style:'currency', currency:'EUR'});
+
+        // Weiterbildung (Korrektur: Max 100k)
+        const wc = parseFloat(document.getElementById('wb_cost').value) || 0;
+        const wr = parseFloat(document.getElementById('wb_size').value);
+        let wbRes = Math.min(wc * wr, 100000);
+        document.getElementById('res_wb').innerText = "Zuschuss: " + wbRes.toLocaleString('de-DE', {style:'currency', currency:'EUR'});
+
+        // F&E
+        const fl = parseFloat(document.getElementById('fe_lohn').value) || 0;
+        const fs = parseFloat(document.getElementById('fe_staff').value) || 0;
+        let feRes = (fl * fs * 1.4) * 0.6;
+        document.getElementById('res_fe').innerText = "Zuschuss: " + feRes.toLocaleString('de-DE', {style:'currency', currency:'EUR'});
+    }
+</script>
+</body>
+</html>
